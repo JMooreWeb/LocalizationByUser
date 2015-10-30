@@ -1,0 +1,28 @@
+﻿@model ConfigureCultureInfoViewModel
+
+@{
+    ViewData["Title"] = "Configure your culture settings";
+}
+
+<h2>@ViewData["Title"].</h2>
+
+<form asp-controller="Manage" asp-action="ConfigureCultureInfo" method="post" class="form-horizontal" role="form">
+    <div class="form-group">
+        <label asp-for="Culture" class="col-sm-2 control-label"></label>
+        <div class="col-sm-10">
+            <select asp-for="Culture" asp-items="Model.AvailableCultures" class="form-control"></select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="UICulture" class="col-sm-2 control-label"></label>
+        <div class="col-sm-10">
+            <select asp-for="UICulture" asp-items="Model.AvailableCultures" class="form-control"></select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-default">Save Settings</button>
+        </div>
+    </div>
+</form>
+
