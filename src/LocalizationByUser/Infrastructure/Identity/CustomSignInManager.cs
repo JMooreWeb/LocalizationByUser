@@ -1,10 +1,12 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
+using LocalizationByUser.Infrastructure.Localization;
 using LocalizationByUser.Models;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
+using Newtonsoft.Json;
 
 namespace LocalizationByUser.Infrastructure.Identity
 {
@@ -23,11 +25,16 @@ namespace LocalizationByUser.Infrastructure.Identity
             var identity = principal.Identity as ClaimsIdentity;
             if (identity != null)
             {
-                if (!string.IsNullOrEmpty(user.Culture))
-                    identity.AddClaim(new Claim("localizationapp:culture", user.Culture));
+                var userPreferences = new UserCulturePreferences
+                {
+                    Language = user.Language,
+                    ShortDateFormat = user.ShortDateFormat,
+                    LongDateFormat = user.LongDateFormat,
+                    CurrencySymbol = user.CurrencySymbol
+                };
 
-                if (!string.IsNullOrEmpty(user.UICulture))
-                    identity.AddClaim(new Claim("localizationapp:uiculture", user.UICulture));
+                if (!string.IsNullOrEmpty(user.Culture))
+                    identity.AddClaim(new Claim("localizationapp:cultureprefs", JsonConvert.SerializeObject(userPreferences)));
             }
 
             return principal;

@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Security.Claims;
+using LocalizationByUser.Infrastructure.Localization;
+using Newtonsoft.Json;
 
 namespace LocalizationByUser.Infrastructure.Identity
 {
     public static class PrincipalExtensions
     {
-        public static string GetCulture(this ClaimsPrincipal principal)
+        public static UserCulturePreferences GetCulture(this ClaimsPrincipal principal)
         {
             if (principal == null)
                 throw new ArgumentNullException(nameof(principal));
 
-            return principal.FindFirstValue("localizationapp:culture");
-        }
+            var userPreferences = principal.FindFirstValue("localizationapp:cultureprefs");
 
-        public static string GetUICulture(this ClaimsPrincipal principal)
-        {
-            if (principal == null)
-                throw new ArgumentNullException(nameof(principal));
+            if (userPreferences == null)
+                return null;
 
-            return principal.FindFirstValue("localizationapp:uiculture");
+            return JsonConvert.DeserializeObject<UserCulturePreferences>(userPreferences);
         }
     }
 }

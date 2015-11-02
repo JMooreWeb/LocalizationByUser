@@ -17,41 +17,22 @@ namespace LocalizationByUser.Infrastructure.Localization
             if (!httpContext.User.Identity.IsAuthenticated)
                 return Task.FromResult((RequestCulture)null);
 
-            string userCulture = null;
-            string userUICulture = null;
-
-            string cultureClaim = httpContext.User.GetCulture();
-            if (!string.IsNullOrWhiteSpace(cultureClaim))
-            {
-                userCulture = cultureClaim;
-            }
-
-            string uicultureClaim = httpContext.User.GetUICulture();
-            if (!string.IsNullOrWhiteSpace(uicultureClaim))
-            {
-                userUICulture = uicultureClaim;
-            }
-
-            if (userCulture == null && userUICulture == null)
-            {
-                // No values specified for either so no match
+            var culturePreferences = httpContext.User.GetCulture();
+            if (culturePreferences == null)
                 return Task.FromResult((RequestCulture)null);
-            }
 
-            if (userCulture != null && userUICulture == null)
-            {
-                // Value for culture but not for UI culture so default to culture value for both
-                userUICulture = userCulture;
-            }
 
-            if (userCulture == null && userUICulture != null)
-            {
-                // Value for UI culture but not for culture so default to UI culture value for both
-                userCulture = userUICulture;
-            }
+            var uiCulture = new CultureInfo(culturePreferences.Language);
+            var culture = new CultureInfo(culturePreferences.Language);
 
-            var requestCulture = new RequestCulture(new CultureInfo(userCulture), new CultureInfo(userUICulture));
+            if (!string.IsNullOrEmpty(culturePreferences.ShortDateFormat))
+                culture.DateTimeFormat.ShortDatePattern = culturePreferences.ShortDateFormat;
+            if (!string.IsNullOrEmpty(culturePreferences.LongDateFormat))
+                culture.DateTimeFormat.LongDatePattern = culturePreferences.LongDateFormat;
+            if (!string.IsNullOrEmpty(culturePreferences.CurrencySymbol))
+                culture.NumberFormat.CurrencySymbol = culturePreferences.CurrencySymbol;
 
+            var requestCulture = new RequestCulture(culture, uiCulture);
             return Task.FromResult(requestCulture);
         }
     }

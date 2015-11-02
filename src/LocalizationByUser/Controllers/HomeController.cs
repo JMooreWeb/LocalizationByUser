@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LocalizationByUser.Resources;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.Localization;
 
 namespace LocalizationByUser.Controllers
 {

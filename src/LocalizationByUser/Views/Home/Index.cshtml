@@ -1,17 +1,18 @@
-﻿@using System.Globalization
-@using System.Threading.Tasks
+﻿@using System.Threading.Tasks
+@using LocalizationByUser.Resources
+@using Microsoft.AspNet.Mvc.Localization
 @{
     ViewData["Title"] = "Home Page";
 }
+@inject IHtmlLocalizer<AppResources> SR
 
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div>Current Culture: @CultureInfo.CurrentCulture.DisplayName</div>
-            <div>Current UI Culture: @CultureInfo.CurrentUICulture.DisplayName</div>
-
-            <div>Current UI Culture: @DateTime.Now.ToLongDateString()</div>
-            <div>Current UI Culture: @DateTime.Now.ToShortDateString()</div>
+            <div>Text in user's language: @SR["WelcomeText"]</div>
+            <div>Sample Long Date: @DateTime.Now.ToString("D")</div>
+            <div>Sample Short Date: @DateTime.Now.ToString("d")</div>
+            <div>Sample currency: @(1000.ToString("C"))</div>
         </div>
     </div>
 </div>

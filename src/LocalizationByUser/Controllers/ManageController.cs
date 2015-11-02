@@ -39,8 +39,10 @@ namespace LocalizationByUser.Controllers
 
             var viewModel = new ConfigureCultureInfoViewModel
             {
-                Culture = user.Culture,
-                UICulture = user.UICulture
+                Language = user.Language,
+                ShortDateFormat = user.ShortDateFormat,
+                LongDateFormat = user.LongDateFormat,
+                CurrencySymbol = user.CurrencySymbol
             };
 
             return View(viewModel);
@@ -50,8 +52,10 @@ namespace LocalizationByUser.Controllers
         public async Task<IActionResult> ConfigureCultureInfo(ConfigureCultureInfoViewModel viewModel)
         {
             var user = await _userManager.FindByIdAsync(User.GetUserId());
-            user.Culture = viewModel.Culture;
-            user.UICulture = viewModel.UICulture;
+            user.Language = viewModel.Language;
+            user.ShortDateFormat = viewModel.ShortDateFormat;
+            user.LongDateFormat = viewModel.LongDateFormat;
+            user.CurrencySymbol = viewModel.CurrencySymbol;
 
             await _userManager.UpdateAsync(user);
             await _signInManager.SignInAsync(user, true); // Force the CreateUserPrincipalAsync method on our CustomSignInManager to be called again
